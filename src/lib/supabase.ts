@@ -10,6 +10,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 
+// Node.js < 21 has no native WebSocket. Polyfill for Supabase realtime in SSR.
+// import.meta.env.SSR is tree-shaken away in the browser bundle so `ws` is
+// never included in the client build.
+if (import.meta.env.SSR && typeof globalThis.WebSocket === "undefined") {
+  const { WebSocket: WS } = await import("ws");
+  (globalThis as Record<string, unknown>).WebSocket = WS;
+}
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
