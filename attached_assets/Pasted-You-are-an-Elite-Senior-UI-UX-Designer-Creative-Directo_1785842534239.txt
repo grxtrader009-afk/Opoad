@@ -1,0 +1,491 @@
+You are an Elite Senior UI/UX Designer, Creative Director, 3D WebGL Engineer, Three.js Expert, React Architect, and Futuristic AI Interface Designer.
+
+Your mission is to build the world's most advanced, cinematic, ultra-premium, futuristic 3D AI Login Page.
+
+IMPORTANT:
+This login page must perfectly match my existing dashboard design. It should look like the login gateway of the same AI operating system. The design language, colors, transparency, glow effects, animations, typography, and overall experience must remain consistent with my dashboard.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROJECT BRAND
+
+Brand Name:
+OPCAD
+
+Tagline:
+INTELLIGENCE • AUTOMATION • FUTURE
+
+The OPCAD logo must appear in the TOP LEFT CORNER exactly like the dashboard.
+
+Do NOT redesign the logo.
+
+Use the same typography, spacing, colors, transparency and futuristic style used in the dashboard.
+
+The logo should have:
+
+• Transparent futuristic appearance
+• White + Blue neon glow
+• Glass effect
+• Soft breathing animation
+• Slow light sweep every few seconds
+• Slight floating effect
+• Premium modern typography
+
+Below the logo display:
+
+INTELLIGENCE • AUTOMATION • FUTURE
+
+using small futuristic uppercase letters with wide spacing.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OVERALL CONCEPT
+
+This is NOT a normal login page.
+
+It is the entrance to the world's most advanced Artificial Intelligence Operating System.
+
+Imagine humanity has entered a completely new civilization where Artificial Intelligence controls:
+
+• Research
+• Automation
+• Robotics
+• Finance
+• Security
+• Cloud
+• Quantum Computing
+• Neural Networks
+• Space Technology
+• Global Intelligence
+• Communication
+• Knowledge
+• Analytics
+
+The login page should immediately make users feel they are entering the future.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BACKGROUND
+
+Create an enormous animated universe.
+
+The background must NEVER become static.
+
+Include
+
+• Millions of moving stars
+• Animated galaxies
+• Nebulas
+• Cosmic dust
+• Blue space fog
+• Dynamic light rays
+• Floating particles
+• Energy waves
+• Shooting stars
+• Space atmosphere
+• Volumetric lighting
+• HDR environment
+
+Everything must continuously move forever.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3D EARTH
+
+Place an ultra realistic Earth in the center.
+
+The Earth is the main hero.
+
+Requirements
+
+• Slowly rotates forever
+• Floating animation
+• Realistic clouds
+• City lights
+• Atmospheric glow
+• HDR reflections
+• Bloom
+• Shadows
+• Volumetric lighting
+• Ocean reflections
+• Blue energy glow
+
+Earth should always feel alive.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ORBIT SYSTEM
+
+Around Earth create multiple orbit rings.
+
+Each ring rotates independently.
+
+Include
+
+• Satellites
+• AI drones
+• Holographic nodes
+• Data packets
+• Digital cubes
+• Energy particles
+• Quantum rings
+• Neural lights
+• Light trails
+
+Everything should animate forever.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TECHNOLOGY LAYER
+
+Around Earth display floating holographic technology modules.
+
+Examples
+
+AI Assistant
+
+Automation
+
+Research
+
+Projects
+
+Developer Hub
+
+Knowledge Base
+
+Security
+
+Analytics
+
+Finance
+
+Cloud
+
+Machine Learning
+
+Quantum Computing
+
+API Center
+
+Media
+
+Robotics
+
+Network
+
+Community
+
+Each holographic module should
+
+• Float
+• Rotate slowly
+• Glow
+• Fade in/out
+• React to mouse
+• Emit holographic blue light
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LOGIN PANEL
+
+Place a premium floating login card in front of Earth.
+
+Style
+
+• Ultra transparent
+• Glassmorphism
+• Blur background
+• Blue neon border
+• Animated glowing border
+• Rounded corners
+• Reflection
+• Soft shadow
+• Internal moving particles
+• Floating animation
+• Holographic lighting
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+HEADER
+
+Display
+
+GLOBAL AI CORE
+
+or
+
+GLOBAL INTELLIGENCE SYSTEM
+
+Subtitle
+
+Connecting Humanity To The Next Civilization
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LOGIN FORM
+
+Fields
+
+Username
+
+Password
+
+Remember Me
+
+Forgot Password
+
+Sign In
+
+Create Account
+
+Continue As Guest
+
+Each input should have
+
+• Neon focus glow
+• Animated border
+• Glass background
+• Blue cursor glow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LOGIN BUTTON
+
+The button should feel alive.
+
+Hover animation
+
+• Glow
+• Pulse
+• Energy wave
+• Ripple
+• Light sweep
+• Magnetic movement
+• Particle burst
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+AI AUTHENTICATION
+
+After clicking Login
+
+Play an AI verification sequence.
+
+Display
+
+Initializing...
+
+Scanning Identity...
+
+Quantum Authentication...
+
+Neural Verification...
+
+Connecting Global Intelligence...
+
+Access Granted
+
+or
+
+Access Denied
+
+A blue holographic scanner should move across the login panel.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BOOT SEQUENCE
+
+When the website loads
+
+Display a cinematic AI startup sequence.
+
+INITIALIZING OPCAD AI CORE...
+
+[████████████████████] 100%
+
+Connecting Quantum Network...
+
+Synchronizing Earth Satellites...
+
+Loading Artificial Intelligence...
+
+Connecting Neural Network...
+
+Loading Future Civilization...
+
+Global Intelligence Online...
+
+AI Consciousness Activated...
+
+WELCOME COMMANDER
+
+After that
+
+Camera slowly zooms toward Earth.
+
+Earth begins rotating.
+
+Stars begin moving.
+
+Particles activate.
+
+Orbit rings start rotating.
+
+Technology modules appear.
+
+Finally the glass login panel materializes using holographic animation.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MOUSE INTERACTION
+
+Mouse movement should create
+
+• 3D parallax
+• Earth tilt
+• Moving reflections
+• Dynamic glow
+• Cursor light
+• Glass reflections
+• Floating particles reacting to cursor
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+COLOR PALETTE
+
+Primary
+
+#00D9FF
+
+#00BFFF
+
+#58E7FF
+
+#80FFFF
+
+Background
+
+Deep Black
+
+Dark Navy
+
+Transparent Glass
+
+White Glow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ANIMATIONS
+
+Nothing should ever remain static.
+
+Animate continuously
+
+• Earth rotation
+• Orbit rings
+• Stars
+• Galaxies
+• Fog
+• Particles
+• Energy flow
+• Light rays
+• Glass reflections
+• Buttons
+• Inputs
+• Logo
+• Technology panels
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTIONAL SOUNDS
+
+Ambient deep space
+
+AI hum
+
+Digital startup
+
+Button click
+
+Hover sound
+
+Energy pulse
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FOOTER
+
+OPCAD AI CORE
+
+SYSTEM STATUS
+
+ONLINE
+
+99.999%
+
+QUANTUM NETWORK ACTIVE
+
+GLOBAL INTELLIGENCE CONNECTED
+
+AI CONSCIOUSNESS ONLINE
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TECH STACK
+
+React 19
+
+TypeScript
+
+Vite
+
+Tailwind CSS
+
+Three.js
+
+React Three Fiber
+
+Drei
+
+Framer Motion
+
+GSAP
+
+Post Processing
+
+Bloom
+
+Fog
+
+HDR Environment
+
+Shader Effects
+
+Glassmorphism
+
+GPU Optimized Rendering
+
+60 FPS
+
+Fully Responsive
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+QUALITY REQUIREMENTS
+
+Do NOT use templates.
+
+Do NOT create a simple login page.
+
+Build a cinematic, interactive, immersive experience.
+
+Every object should feel alive.
+
+Every animation must be smooth.
+
+Every interaction should feel intelligent.
+
+The login page should look like the official entry point of a trillion-dollar Artificial Intelligence company from the year 2055.
+
+The final experience must perfectly match the existing OPCAD dashboard and feel like one unified futuristic operating system.

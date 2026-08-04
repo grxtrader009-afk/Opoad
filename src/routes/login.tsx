@@ -1,504 +1,902 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { LoginEarthScene } from "@/components/dashboard/LoginEarthScene";
-import { Eye, EyeOff, Mail, Lock, Globe, ChevronDown, ArrowRight, Shield, Brain, Zap, Rocket, Loader as Loader2 } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { CinematicLoginScene } from "@/components/dashboard/CinematicLoginScene";
+import { Eye, EyeOff, Mail, Lock, Shield, ArrowRight, Loader2, User } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Sign In — OPOAD" },
-      {
-        name: "description",
-        content: "Sign in to OPOAD — The World's Most Advanced AI Operating System.",
-      },
+      { title: "Sign In — OPCAD AI CORE" },
+      { name: "description", content: "Enter the world's most advanced AI Operating System." },
     ],
   }),
   component: LoginPage,
 });
 
-const STATS = [
-  { icon: Globe, value: "195+", label: "Countries" },
-  { icon: null, value: "1.2M+", label: "News / Day" },
-  { icon: null, value: "3.8M+", label: "Videos Processed" },
-  { icon: null, value: "8.9M+", label: "Active Users" },
-  { icon: Shield, value: "99.99%", label: "System Uptime" },
+// ─── Boot sequence messages ───────────────────────────────────────────────────
+const BOOT_STEPS = [
+  { text: "INITIALIZING OPCAD AI CORE...", pct: 12 },
+  { text: "Connecting Quantum Network...", pct: 25 },
+  { text: "Synchronizing Earth Satellites...", pct: 40 },
+  { text: "Loading Artificial Intelligence...", pct: 54 },
+  { text: "Connecting Neural Network...", pct: 67 },
+  { text: "Loading Future Civilization...", pct: 80 },
+  { text: "Global Intelligence Online...", pct: 92 },
+  { text: "AI Consciousness Activated...", pct: 100 },
 ];
 
-const FEATURES = [
-  { icon: Brain, label: "AI POWERED", sub: "Multi-Agent\nIntelligence", color: "text-sky-400" },
-  { icon: Zap, label: "REAL-TIME", sub: "Infinite News\nStreams", color: "text-amber-400" },
-  { icon: Shield, label: "SECURE", sub: "Enterprise Grade\nEncryption", color: "text-violet-400" },
-  { icon: Rocket, label: "AUTONOMOUS", sub: "End-to-End\nAutomation", color: "text-sky-300" },
+const TOTAL_BOOT_MS = 4200;
+
+// ─── AI auth steps ────────────────────────────────────────────────────────────
+const AUTH_STEPS = [
+  "Initializing...",
+  "Scanning Identity...",
+  "Quantum Authentication...",
+  "Neural Verification...",
+  "Connecting Global Intelligence...",
 ];
 
-function GoogleIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <path
-        d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"
-        fill="#4285F4"
-      />
-      <path
-        d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"
-        fill="#34A853"
-      />
-      <path
-        d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"
-        fill="#FBBC05"
-      />
-      <path
-        d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
-        fill="#EA4335"
-      />
-    </svg>
-  );
-}
+// ─── Holographic tech modules ─────────────────────────────────────────────────
+const TECH_MODULES = [
+  { label: "AI ASSISTANT", icon: "🧠", delay: 0 },
+  { label: "AUTOMATION", icon: "⚡", delay: 0.15 },
+  { label: "RESEARCH", icon: "🔬", delay: 0.3 },
+  { label: "SECURITY", icon: "🛡️", delay: 0.45 },
+  { label: "QUANTUM", icon: "⚛️", delay: 0.6 },
+  { label: "NEURAL NET", icon: "🕸️", delay: 0.75 },
+  { label: "ANALYTICS", icon: "📊", delay: 0.9 },
+  { label: "CLOUD", icon: "☁️", delay: 1.05 },
+  { label: "ROBOTICS", icon: "🤖", delay: 1.2 },
+  { label: "API CENTER", icon: "🔗", delay: 1.35 },
+  { label: "FINANCE", icon: "💹", delay: 1.5 },
+  { label: "MEDIA", icon: "🎬", delay: 1.65 },
+];
 
-function MicrosoftIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <rect x="0" y="0" width="8.5" height="8.5" fill="#F25022" />
-      <rect x="9.5" y="0" width="8.5" height="8.5" fill="#7FBA00" />
-      <rect x="0" y="9.5" width="8.5" height="8.5" fill="#00A4EF" />
-      <rect x="9.5" y="9.5" width="8.5" height="8.5" fill="#FFB900" />
-    </svg>
-  );
-}
+// ─── BootScreen ───────────────────────────────────────────────────────────────
+function BootScreen({ onComplete }: { onComplete: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const [stepIdx, setStepIdx] = useState(0);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [fading, setFading] = useState(false);
+  const startRef = useRef(Date.now());
+  const doneRef = useRef(false);
 
-function GitHubIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-    </svg>
-  );
-}
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startRef.current;
+      const pct = Math.min((elapsed / TOTAL_BOOT_MS) * 100, 100);
+      setProgress(pct);
 
-function OPOADCubeIcon() {
+      // Advance step
+      const nextStep = BOOT_STEPS.findLastIndex((s) => s.pct <= pct);
+      setStepIdx(Math.max(0, nextStep));
+
+      if (pct >= 100 && !doneRef.current) {
+        doneRef.current = true;
+        clearInterval(interval);
+        setShowWelcome(true);
+        setTimeout(() => setFading(true), 900);
+        setTimeout(() => onComplete(), 1700);
+      }
+    }, 30);
+    return () => clearInterval(interval);
+  }, [onComplete]);
+
   return (
-    <div className="relative flex h-12 w-12 items-center justify-center">
+    <div
+      className="pointer-events-none fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#05070a] transition-opacity duration-700"
+      style={{ opacity: fading ? 0 : 1 }}
+    >
+      {/* Starfield */}
+      <div className="absolute inset-0 starfield" />
+      <div className="absolute inset-0 grid-overlay" />
+
+      {/* Radial glow */}
       <div
-        className="absolute inset-0 rounded-xl border border-amber-400/60 rotate-45"
-        style={{ boxShadow: "0 0 16px rgba(251,191,36,0.4), inset 0 0 16px rgba(251,191,36,0.1)" }}
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: "600px",
+          height: "600px",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%,-50%)",
+          background:
+            "radial-gradient(circle, rgba(0,217,255,0.12) 0%, rgba(0,217,255,0.04) 50%, transparent 75%)",
+          filter: "blur(20px)",
+        }}
       />
-      <div className="absolute inset-2 rounded-lg border border-amber-300/40 rotate-45" />
-      <div
-        className="relative z-10 h-4 w-4 rounded-sm bg-amber-400/20 border border-amber-400/80 rotate-45"
-        style={{ boxShadow: "0 0 8px rgba(251,191,36,0.8)" }}
-      />
+
+      <div className="relative z-10 flex flex-col items-center gap-8 px-8 text-center">
+        {/* Logo */}
+        <div className="flex flex-col items-center gap-2">
+          <img
+            src="/opoad-logo-transparent.png"
+            alt="OPCAD"
+            className="h-14 w-auto object-contain"
+            style={{
+              filter:
+                "brightness(1.8) drop-shadow(0 0 22px rgba(0,217,255,0.9)) drop-shadow(0 0 8px rgba(255,255,255,0.5)) drop-shadow(0 0 50px rgba(0,217,255,0.5))",
+              animation: "breatheLogo 3s ease-in-out infinite",
+            }}
+          />
+          <p className="font-mono text-[9px] tracking-[0.38em] text-sky-400/80">
+            INTELLIGENCE · AUTOMATION · FUTURE
+          </p>
+        </div>
+
+        {/* Messages */}
+        <div className="flex flex-col gap-1 min-h-[200px] items-start w-full max-w-md">
+          {BOOT_STEPS.slice(0, stepIdx + 1).map((step, i) => (
+            <p
+              key={i}
+              className="font-mono text-xs text-left"
+              style={{
+                color: i === stepIdx ? "#4FD6FF" : "rgba(255,255,255,0.35)",
+                textShadow:
+                  i === stepIdx ? "0 0 12px rgba(79,214,255,0.7)" : "none",
+                animation: i === stepIdx ? "bootLine 0.3s ease-out" : "none",
+              }}
+            >
+              {i < stepIdx ? (
+                <span className="text-emerald-400 mr-2">✓</span>
+              ) : (
+                <span className="mr-2 animate-pulse">▶</span>
+              )}
+              {step.text}
+            </p>
+          ))}
+        </div>
+
+        {/* Progress bar */}
+        <div className="w-full max-w-md">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="font-mono text-[10px] text-sky-400/60 tracking-widest">
+              SYSTEM LOAD
+            </span>
+            <span className="font-mono text-[10px] text-sky-400/80">
+              {Math.round(progress)}%
+            </span>
+          </div>
+          <div className="h-1.5 w-full rounded-full bg-white/5 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{
+                width: `${progress}%`,
+                background: "linear-gradient(90deg, #00D9FF, #4FD6FF, #80FFFF)",
+                boxShadow: "0 0 10px rgba(79,214,255,0.8), 0 0 20px rgba(0,217,255,0.4)",
+                transition: "width 0.1s linear",
+              }}
+            />
+          </div>
+          <div className="mt-2 font-mono text-[8px] tracking-[0.4em] text-white/20">
+            ████████████████████████████████████████
+          </div>
+        </div>
+
+        {/* Welcome message */}
+        {showWelcome && (
+          <div
+            className="font-mono text-xl tracking-[0.3em] text-white"
+            style={{
+              textShadow: "0 0 20px rgba(0,217,255,0.9), 0 0 40px rgba(0,217,255,0.4)",
+              animation: "welcomeFadeIn 0.6s ease-out",
+            }}
+          >
+            WELCOME COMMANDER
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
+// ─── Tech modules overlay ──────────────────────────────────────────────────────
+function TechModulesOverlay({ visible }: { visible: boolean }) {
+  if (!visible) return null;
+  return (
+    <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
+      {TECH_MODULES.map((mod, i) => {
+        // Distribute around the edges
+        const positions = [
+          { top: "8%", left: "2%" },
+          { top: "22%", left: "1%" },
+          { top: "38%", left: "3%" },
+          { top: "55%", left: "1%" },
+          { top: "70%", left: "2%" },
+          { top: "82%", left: "4%" },
+          { top: "8%", right: "2%" },
+          { top: "22%", right: "1%" },
+          { top: "38%", right: "3%" },
+          { top: "55%", right: "1%" },
+          { top: "70%", right: "2%" },
+          { top: "82%", right: "4%" },
+        ] as React.CSSProperties[];
+
+        return (
+          <div
+            key={mod.label}
+            className="absolute hidden lg:flex items-center gap-2 rounded-lg border border-sky-400/20 bg-sky-950/20 px-3 py-2 backdrop-blur-sm"
+            style={{
+              ...positions[i],
+              animation: `moduleFloat ${3.5 + (i % 4) * 0.7}s ease-in-out infinite, moduleFadeIn 0.6s ease-out both`,
+              animationDelay: `${mod.delay}s, ${mod.delay}s`,
+              boxShadow: "0 0 12px rgba(0,217,255,0.06), inset 0 1px 0 rgba(255,255,255,0.04)",
+            }}
+          >
+            <span className="text-base leading-none">{mod.icon}</span>
+            <div>
+              <p className="font-mono text-[8px] tracking-widest text-sky-400/80">
+                {mod.label}
+              </p>
+              <div
+                className="mt-0.5 h-0.5 rounded-full"
+                style={{
+                  width: `${30 + (i * 7) % 30}px`,
+                  background: "linear-gradient(90deg, #4FD6FF, transparent)",
+                  opacity: 0.6,
+                }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── AI Auth overlay ──────────────────────────────────────────────────────────
+function AIAuthOverlay({
+  active,
+  success,
+  onDone,
+}: {
+  active: boolean;
+  success: boolean | null;
+  onDone: () => void;
+}) {
+  const [currentStep, setCurrentStep] = useState(-1);
+  const [scanPct, setScanPct] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+
+  useEffect(() => {
+    if (!active) {
+      setCurrentStep(-1);
+      setScanPct(0);
+      setShowResult(false);
+      return;
+    }
+    let step = 0;
+    const stepInterval = setInterval(() => {
+      if (step < AUTH_STEPS.length) {
+        setCurrentStep(step);
+        step++;
+      } else {
+        clearInterval(stepInterval);
+        setShowResult(true);
+        setTimeout(onDone, 1200);
+      }
+    }, 480);
+    const scanInterval = setInterval(() => {
+      setScanPct((p) => {
+        if (p >= 100) { clearInterval(scanInterval); return 100; }
+        return p + 2.5;
+      });
+    }, 60);
+    return () => { clearInterval(stepInterval); clearInterval(scanInterval); };
+  }, [active, onDone]);
+
+  if (!active) return null;
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center rounded-3xl overflow-hidden">
+      {/* Scanner line */}
+      <div
+        className="absolute left-0 right-0 h-px"
+        style={{
+          top: `${scanPct}%`,
+          background: "linear-gradient(90deg, transparent, #00D9FF, #80FFFF, #00D9FF, transparent)",
+          boxShadow: "0 0 16px rgba(0,217,255,0.9), 0 0 32px rgba(0,217,255,0.4)",
+          transition: "top 0.06s linear",
+        }}
+      />
+      {/* Blue tint overlay */}
+      <div
+        className="absolute inset-0 rounded-3xl"
+        style={{ background: "rgba(0, 60, 90, 0.45)", backdropFilter: "blur(2px)" }}
+      />
+
+      <div className="relative z-10 flex flex-col items-center gap-3 px-8 text-center">
+        {/* Spinning ring */}
+        <div
+          className="h-14 w-14 rounded-full border-2 border-sky-400/30 border-t-sky-400"
+          style={{ animation: "spin 1s linear infinite" }}
+        />
+
+        <div className="space-y-1.5 mt-2">
+          {AUTH_STEPS.map((step, i) => (
+            <p
+              key={step}
+              className="font-mono text-xs transition-all duration-300"
+              style={{
+                color:
+                  i < currentStep
+                    ? "rgba(52,211,153,0.8)"
+                    : i === currentStep
+                      ? "#4FD6FF"
+                      : "rgba(255,255,255,0.2)",
+                textShadow:
+                  i === currentStep ? "0 0 10px rgba(79,214,255,0.8)" : "none",
+              }}
+            >
+              {i < currentStep ? "✓ " : i === currentStep ? "▶ " : "  "}
+              {step}
+            </p>
+          ))}
+        </div>
+
+        {showResult && (
+          <div
+            className="mt-3 rounded-lg border px-6 py-2 font-mono text-sm tracking-widest"
+            style={{
+              borderColor: success ? "rgba(52,211,153,0.5)" : "rgba(248,113,113,0.5)",
+              background: success ? "rgba(52,211,153,0.1)" : "rgba(248,113,113,0.1)",
+              color: success ? "#34d399" : "#f87171",
+              textShadow: success
+                ? "0 0 12px rgba(52,211,153,0.8)"
+                : "0 0 12px rgba(248,113,113,0.8)",
+              animation: "welcomeFadeIn 0.4s ease-out",
+            }}
+          >
+            {success ? "ACCESS GRANTED" : "ACCESS DENIED"}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main page ────────────────────────────────────────────────────────────────
 function LoginPage() {
   const navigate = useNavigate();
   const { signIn, signUp } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
+
+  // Phases: boot → ready
+  const [phase, setPhase] = useState<"boot" | "ready">("boot");
+  const [panelVisible, setPanelVisible] = useState(false);
+
+  // Mouse for parallax
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
+
+  // Form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [authSuccess, setAuthSuccess] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+
+  // Auth sequence
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [authResult, setAuthResult] = useState<boolean | null>(null);
+  const pendingActionRef = useRef<(() => Promise<void>) | null>(null);
+
+  // UTC clock
+  const [time, setTime] = useState<string | null>(null);
+  useEffect(() => {
+    const tick = () =>
+      setTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    setMouseX((e.clientX / window.innerWidth) * 2 - 1);
+    setMouseY(-((e.clientY / window.innerHeight) * 2 - 1));
+  }, []);
+
+  const handleBootComplete = useCallback(() => {
+    setPhase("ready");
+    setTimeout(() => setPanelVisible(true), 100);
+  }, []);
 
   const handleSubmit = async () => {
     if (!email.trim() || !password.trim()) return;
     setAuthError(null);
     setAuthSuccess(null);
-    setSubmitting(true);
 
-    if (isSignUp) {
-      const { error, needsConfirmation } = await signUp(email.trim(), password);
-      setSubmitting(false);
-      if (error) {
-        setAuthError(error);
-      } else if (needsConfirmation) {
-        // Email confirmation required — tell user to check inbox
-        setAuthSuccess(
-          `✅ Account bana diya! ${email.trim()} pe confirmation email bheja gaya hai. Email open karein aur link pe click karein, phir Sign In karein.`
-        );
-        setIsSignUp(false); // Switch to sign-in mode
+    // Store the actual auth action, run after auth sequence
+    pendingActionRef.current = async () => {
+      if (isSignUp) {
+        const { error, needsConfirmation } = await signUp(email.trim(), password);
+        if (error) {
+          setAuthResult(false);
+          setAuthError(error);
+        } else if (needsConfirmation) {
+          setAuthResult(true);
+          setAuthSuccess(
+            `Account created! Check ${email.trim()} for a confirmation email, then Sign In.`,
+          );
+          setIsSignUp(false);
+        } else {
+          setAuthResult(true);
+          navigate({ to: "/" });
+        }
       } else {
-        // Auto-confirmed (rare) — go to dashboard
-        navigate({ to: "/" });
+        const { error } = await signIn(email.trim(), password);
+        if (error) {
+          setAuthResult(false);
+          setAuthError(error);
+        } else {
+          setAuthResult(true);
+          // Navigate happens in onAuthDone after "ACCESS GRANTED" shows
+        }
       }
-    } else {
-      const { error } = await signIn(email.trim(), password);
-      setSubmitting(false);
-      if (error) {
-        setAuthError(error);
-      } else {
-        navigate({ to: "/" });
-      }
-    }
+    };
+
+    setIsAuthenticating(true);
   };
 
+  const handleAuthDone = useCallback(async () => {
+    if (pendingActionRef.current) {
+      await pendingActionRef.current();
+      pendingActionRef.current = null;
+    }
+    // Small delay so user sees the result
+    setTimeout(() => {
+      setIsAuthenticating(false);
+      if (authResult === true && !isSignUp) {
+        navigate({ to: "/" });
+      }
+    }, 800);
+  }, [authResult, isSignUp, navigate]);
+
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-[#05070A] flex flex-col">
-      {/* Starfield */}
-      <div className="pointer-events-none absolute inset-0">
+    <div
+      className="relative min-h-screen w-full overflow-hidden bg-[#05070A]"
+      onMouseMove={handleMouseMove}
+    >
+      {/* ── Full-screen 3D scene ── */}
+      <CinematicLoginScene mouseX={mouseX} mouseY={mouseY} />
+
+      {/* ── CSS background layers ── */}
+      <div className="pointer-events-none absolute inset-0 z-[1]">
         <div className="starfield" />
         <div className="grid-overlay" />
+        {/* Ambient radial glow behind Earth center */}
+        <div
+          className="absolute"
+          style={{
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+            width: "700px",
+            height: "700px",
+            background:
+              "radial-gradient(circle, rgba(0,100,180,0.18) 0%, rgba(0,60,120,0.08) 45%, transparent 70%)",
+            filter: "blur(30px)",
+          }}
+        />
       </div>
 
-      {/* Top-right language */}
-      <div className="relative z-20 flex justify-end px-6 pt-4">
-        <button className="glass flex items-center gap-2 rounded-full px-4 py-2 text-xs font-mono tracking-widest text-foreground/80 hover:text-primary transition-colors">
-          <Globe size={13} />
-          English
-          <ChevronDown size={12} />
-        </button>
-      </div>
+      {/* ── Tech modules overlay ── */}
+      <TechModulesOverlay visible={phase === "ready"} />
 
-      {/* Main content */}
-      <div className="relative z-10 flex flex-1 flex-col lg:flex-row">
-        {/* ── LEFT PANEL ── */}
-        <div className="flex flex-1 flex-col items-center justify-between px-8 py-6 lg:items-start lg:px-16">
-          {/* Hero illustration — circle then logo then welcome, clean stack */}
-          <div className="w-full max-w-lg">
-            {/* glowing-circle wrapper — margin-bottom: 24px after circle */}
-            <div className="relative mx-auto lg:mx-0 w-72 md:w-80 lg:w-[380px]" style={{ marginBottom: "24px" }}>
-
-              {/* ── Circle section ── */}
-              <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
-                {/* Wide ambient glow behind everything */}
-                <div
-                  className="absolute rounded-full pointer-events-none"
-                  style={{
-                    inset: "-40px",
-                    background: "radial-gradient(circle, rgba(56,189,248,0.18) 0%, rgba(56,189,248,0.06) 40%, transparent 70%)",
-                    filter: "blur(8px)",
-                  }}
-                />
-
-                {/* Illusion ring 4 — outermost, slow amber */}
-                <div
-                  className="absolute rounded-full animate-spin pointer-events-none"
-                  style={{
-                    inset: "-48px",
-                    animationDuration: "60s",
-                    animationDirection: "reverse",
-                    border: "1px dashed rgba(251,191,36,0.18)",
-                    boxShadow: "0 0 20px rgba(251,191,36,0.12)",
-                  }}
-                />
-
-                {/* Illusion ring 3 — large blue pulse ring */}
-                <div
-                  className="absolute rounded-full animate-spin pointer-events-none"
-                  style={{
-                    inset: "-32px",
-                    animationDuration: "40s",
-                    background: "transparent",
-                    border: "1px solid transparent",
-                    boxShadow: "0 0 0 1px rgba(56,189,248,0.22), 0 0 24px rgba(56,189,248,0.18)",
-                  }}
-                />
-
-                {/* Illusion ring 2 — close amber reverse */}
-                <div
-                  className="absolute rounded-full animate-spin pointer-events-none"
-                  style={{
-                    inset: "-18px",
-                    animationDuration: "28s",
-                    animationDirection: "reverse",
-                    border: "1.5px solid rgba(251,191,36,0.5)",
-                    boxShadow: "0 0 18px rgba(251,191,36,0.55), inset 0 0 18px rgba(251,191,36,0.1)",
-                  }}
-                />
-
-                {/* Illusion ring 1 — tight bright blue */}
-                <div
-                  className="absolute rounded-full animate-spin pointer-events-none"
-                  style={{
-                    inset: "-8px",
-                    animationDuration: "16s",
-                    border: "2px solid rgba(56,189,248,0.8)",
-                    boxShadow: "0 0 20px rgba(56,189,248,0.9), 0 0 40px rgba(56,189,248,0.45), inset 0 0 20px rgba(56,189,248,0.15)",
-                  }}
-                />
-
-                {/* Main circle — Earth scene, dark-blue inner glow (not pitch black) */}
-                <div
-                  className="relative z-10 h-full w-full rounded-full overflow-hidden"
-                  style={{
-                    background: "radial-gradient(circle at 40% 40%, #0a1e3a 0%, #050d1a 55%, #000 100%)",
-                    boxShadow:
-                      "0 0 0 2px rgba(56,189,248,0.95), 0 0 40px rgba(56,189,248,0.7), 0 0 100px rgba(56,189,248,0.35)",
-                    border: "2px solid rgba(56,189,248,1)",
-                  }}
-                >
-                  <LoginEarthScene />
-                </div>
-              </div>
-
-            </div>
-
-            {/* Welcome text */}
-            <div className="text-center lg:text-left">
-              <h2 className="text-2xl font-semibold text-white">
-                Welcome to{" "}
-                <span
-                  className="text-amber-400"
-                  style={{ textShadow: "0 0 20px rgba(251,191,36,0.5)" }}
-                >
-                  OPOAD
-                </span>
-              </h2>
-              <p className="mt-2 text-sm text-white/60 leading-relaxed">
-                The World's Most Advanced AI Video & News Ecosystem.
-                <br />
-                Research. Automate. Create. Inspire.
-              </p>
-            </div>
-
-            {/* Feature cards */}
-            <div className="mt-6 grid grid-cols-4 gap-2">
-              {FEATURES.map((f) => (
-                <div
-                  key={f.label}
-                  className="glass flex flex-col items-center gap-1.5 rounded-xl px-2 py-3 text-center"
-                >
-                  <f.icon size={20} className={f.color} />
-                  <p className={`font-mono text-[8px] font-bold tracking-widest ${f.color}`}>
-                    {f.label}
-                  </p>
-                  <p className="text-[8px] text-white/50 leading-tight whitespace-pre-line">
-                    {f.sub}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Earth image */}
-          <div
-            className="mt-6 w-full max-w-lg overflow-hidden rounded-2xl"
-            style={{ height: "120px" }}
-          >
+      {/* ── Top bar ── */}
+      {phase === "ready" && (
+        <div
+          className="pointer-events-auto relative z-20 flex items-center justify-between px-6 py-4"
+          style={{ animation: "moduleFadeIn 0.8s ease-out" }}
+        >
+          {/* Logo */}
+          <div className="flex flex-col items-start gap-0.5">
             <img
-              src="/src/assets/earth.jpg"
-              alt="Earth"
-              className="w-full object-cover object-center opacity-60"
+              src="/opoad-logo-transparent.png"
+              alt="OPCAD"
+              className="h-10 w-auto object-contain"
               style={{
-                height: "200px",
-                marginTop: "-40px",
-                filter: "saturate(1.4) hue-rotate(10deg)",
+                filter:
+                  "brightness(1.8) drop-shadow(0 0 18px rgba(0,217,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,0.6)) drop-shadow(0 0 40px rgba(0,217,255,0.5))",
+                animation: "breatheLogo 4s ease-in-out infinite",
               }}
             />
+            <p className="font-mono text-[9px] tracking-[0.32em] text-sky-400/80 pl-1">
+              INTELLIGENCE · AUTOMATION · FUTURE
+            </p>
+          </div>
+
+          {/* System status pill */}
+          <div className="glass hidden md:flex items-center gap-3 rounded-full px-5 py-2.5">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-foreground/90">
+              System · Online
+            </span>
+            <span className="h-4 w-px bg-primary/30" />
+            <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground">
+              {time} UTC
+            </span>
           </div>
         </div>
+      )}
 
-        {/* ── RIGHT PANEL ── */}
-        <div className="flex w-full flex-col items-center justify-center px-6 py-8 lg:w-[480px] lg:px-10 lg:py-10">
+      {/* ── Central login panel ── */}
+      {phase === "ready" && (
+        <div className="pointer-events-auto relative z-20 flex flex-1 items-center justify-center px-4 py-6 min-h-[calc(100vh-160px)]">
           <div
-            className="glass w-full max-w-md rounded-3xl p-8"
+            className="w-full max-w-md"
             style={{
-              borderColor: "rgba(56,189,248,0.25)",
-              boxShadow:
-                "0 0 60px rgba(56,189,248,0.08), 0 0 0 1px rgba(56,189,248,0.1), inset 0 1px 0 rgba(255,255,255,0.06)",
+              opacity: panelVisible ? 1 : 0,
+              transform: panelVisible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
+              transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
             }}
           >
-            {/* System status */}
-            <div className="flex justify-center mb-6">
-              <div className="flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-                </span>
-                <span className="font-mono text-[10px] text-emerald-400 tracking-wide">
-                  System Status: All Systems Operational
-                </span>
-              </div>
-            </div>
-
-            {/* Heading */}
-            <div className="text-center mb-6">
-              <h1 className="text-2xl font-semibold text-white leading-tight">
-                Sign In to Your{" "}
-                <span
-                  className="text-amber-400"
-                  style={{ textShadow: "0 0 20px rgba(251,191,36,0.5)" }}
-                >
-                  Universe
-                </span>
-              </h1>
-              <p className="mt-1.5 text-sm text-white/50">Access the infinite power of OPOAD</p>
-            </div>
-
-            {/* OPOAD cube icon */}
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-amber-400/40" />
-              <OPOADCubeIcon />
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-400/40" />
-            </div>
-
-            {/* Social buttons */}
-            <div className="space-y-3 mb-5">
-              {[
-                { icon: <GoogleIcon />, label: "Continue with Google" },
-                { icon: <MicrosoftIcon />, label: "Continue with Microsoft" },
-                { icon: <GitHubIcon />, label: "Continue with GitHub" },
-              ].map((btn) => (
-                <button
-                  key={btn.label}
-                  className="flex w-full items-center justify-center gap-3 rounded-xl border border-white/10 bg-white/5 py-3 text-sm text-white/80 transition-all hover:border-sky-400/40 hover:bg-white/8 hover:text-white"
-                >
-                  {btn.icon}
-                  <span className="font-medium">{btn.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* OR divider */}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="h-px flex-1 bg-white/10" />
-              <span className="font-mono text-[10px] text-white/30 tracking-widest">OR</span>
-              <div className="h-px flex-1 bg-white/10" />
-            </div>
-
-            {/* Email */}
-            <div className="relative mb-3">
-              <Mail size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                placeholder="Enter your email"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-4 text-sm text-white placeholder-white/30 outline-none transition-all focus:border-sky-400/50 focus:bg-white/8 focus:ring-1 focus:ring-sky-400/20"
-              />
-            </div>
-
-            {/* Password */}
-            <div className="relative mb-4">
-              <Lock size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30" />
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                placeholder="Enter your password"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-11 pr-11 text-sm text-white placeholder-white/30 outline-none transition-all focus:border-sky-400/50 focus:bg-white/8 focus:ring-1 focus:ring-sky-400/20"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
-              >
-                {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-              </button>
-            </div>
-
-            {/* Remember + Forgot */}
-            <div className="flex items-center justify-between mb-5">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <div
-                  onClick={() => setRemember(!remember)}
-                  className={`flex h-4 w-4 items-center justify-center rounded border transition-all ${remember ? "border-amber-400 bg-amber-400/20" : "border-white/20 bg-white/5"}`}
-                >
-                  {remember && <div className="h-2 w-2 rounded-sm bg-amber-400" />}
-                </div>
-                <span className="text-xs text-white/60">Remember me</span>
-              </label>
-              <button className="text-xs text-amber-400 hover:text-amber-300 transition-colors">
-                Forgot Password?
-              </button>
-            </div>
-
-            {/* Success message (e.g. email confirmation sent) */}
-            {authSuccess && (
-              <div className="mb-3 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-xs text-green-400 leading-relaxed">
-                {authSuccess}
-              </div>
-            )}
-
-            {/* Error message */}
-            {authError && (
-              <div className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-400 leading-relaxed">
-                {authError}
-              </div>
-            )}
-
-            {/* Sign In / Sign Up button */}
-            <button
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold text-black transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
+            {/* Glass card */}
+            <div
+              className="relative overflow-hidden rounded-3xl p-8"
               style={{
-                background: "linear-gradient(135deg, #f59e0b, #d97706)",
-                boxShadow: "0 0 24px rgba(245,158,11,0.4), 0 4px 16px rgba(0,0,0,0.3)",
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, rgba(0,120,200,0.06) 100%)",
+                backdropFilter: "blur(24px) saturate(160%)",
+                border: "1px solid rgba(0,217,255,0.25)",
+                boxShadow:
+                  "0 0 80px rgba(0,217,255,0.08), 0 0 0 1px rgba(0,217,255,0.08), inset 0 1px 0 rgba(255,255,255,0.07), 0 24px 60px rgba(0,0,0,0.6)",
+                animation: "neonBorderPulse 4s ease-in-out infinite",
               }}
             >
-              {submitting ? (
-                <Loader2 size={16} className="animate-spin" />
-              ) : (
-                <>
-                  {isSignUp ? "Create Account" : "Sign In"}
-                  <ArrowRight size={16} />
-                </>
-              )}
-            </button>
-
-            {/* Create account */}
-            <p className="mt-4 text-center text-xs text-white/40">
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-              <button
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setAuthError(null);
-                }}
-                className="text-sky-400 hover:text-sky-300 transition-colors font-medium"
+              {/* Internal moving particle shimmer */}
+              <div
+                className="pointer-events-none absolute inset-0 rounded-3xl overflow-hidden"
+                style={{ zIndex: 0 }}
               >
-                {isSignUp ? "Sign In" : "Create Account"}
-              </button>
-            </p>
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,217,255,0.07), transparent 70%)",
+                  }}
+                />
+                <div
+                  className="absolute h-px left-0 right-0"
+                  style={{
+                    top: "40%",
+                    background:
+                      "linear-gradient(90deg, transparent, rgba(0,217,255,0.15), transparent)",
+                    animation: "scanline 8s linear infinite",
+                  }}
+                />
+              </div>
 
-            {/* Security badge */}
-            <div className="mt-5 flex items-center justify-center gap-2 border-t border-white/5 pt-4">
-              <Shield size={14} className="text-white/30" />
-              <div className="text-center">
-                <p className="text-[10px] text-white/40">Secured by Quantum Encryption</p>
-                <p className="text-[9px] text-white/25">256-bit End-to-End Protection</p>
+              {/* AI Auth overlay */}
+              <AIAuthOverlay
+                active={isAuthenticating}
+                success={authResult}
+                onDone={handleAuthDone}
+              />
+
+              <div className="relative z-10">
+                {/* Header */}
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 mb-4">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                    </span>
+                    <span className="font-mono text-[10px] text-emerald-400 tracking-wide">
+                      GLOBAL INTELLIGENCE SYSTEM · ONLINE
+                    </span>
+                  </div>
+
+                  <h1
+                    className="text-2xl font-semibold text-white leading-tight"
+                    style={{ textShadow: "0 0 20px rgba(0,217,255,0.25)" }}
+                  >
+                    GLOBAL AI CORE
+                  </h1>
+                  <p className="mt-1.5 text-sm text-white/50 font-mono tracking-wider">
+                    Connecting Humanity To The Next Civilization
+                  </p>
+                </div>
+
+                {/* Cyan divider */}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-sky-400/40" />
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-lg border border-sky-400/40"
+                    style={{
+                      background: "rgba(0,217,255,0.08)",
+                      boxShadow: "0 0 12px rgba(0,217,255,0.3)",
+                    }}
+                  >
+                    <Shield size={14} className="text-sky-400" />
+                  </div>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-sky-400/40" />
+                </div>
+
+                {/* Tab toggle */}
+                <div className="flex rounded-xl border border-white/10 bg-white/5 p-1 mb-5">
+                  {["Sign In", "Create Account"].map((label, i) => (
+                    <button
+                      key={label}
+                      onClick={() => {
+                        setIsSignUp(i === 1);
+                        setAuthError(null);
+                        setAuthSuccess(null);
+                      }}
+                      className="flex-1 rounded-lg py-2 text-xs font-semibold font-mono tracking-wider transition-all"
+                      style={{
+                        background:
+                          isSignUp === (i === 1)
+                            ? "linear-gradient(135deg, rgba(0,217,255,0.15), rgba(79,214,255,0.08))"
+                            : "transparent",
+                        color: isSignUp === (i === 1) ? "#4FD6FF" : "rgba(255,255,255,0.4)",
+                        boxShadow:
+                          isSignUp === (i === 1)
+                            ? "0 0 12px rgba(0,217,255,0.2), inset 0 1px 0 rgba(0,217,255,0.1)"
+                            : "none",
+                        border: isSignUp === (i === 1) ? "1px solid rgba(0,217,255,0.2)" : "none",
+                      }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Email field */}
+                <div className="relative mb-3 group">
+                  <Mail
+                    size={14}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-sky-400 transition-colors"
+                  />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                    placeholder="Enter your email"
+                    className="w-full rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-white/30 outline-none transition-all"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.border = "1px solid rgba(0,217,255,0.5)";
+                      e.currentTarget.style.background = "rgba(0,217,255,0.05)";
+                      e.currentTarget.style.boxShadow =
+                        "0 0 0 3px rgba(0,217,255,0.08), 0 0 16px rgba(0,217,255,0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)";
+                      e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  />
+                </div>
+
+                {/* Password field */}
+                <div className="relative mb-4 group">
+                  <Lock
+                    size={14}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-sky-400 transition-colors"
+                  />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                    placeholder="Enter your password"
+                    className="w-full rounded-xl py-3 pl-11 pr-11 text-sm text-white placeholder-white/30 outline-none transition-all"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.border = "1px solid rgba(0,217,255,0.5)";
+                      e.currentTarget.style.background = "rgba(0,217,255,0.05)";
+                      e.currentTarget.style.boxShadow =
+                        "0 0 0 3px rgba(0,217,255,0.08), 0 0 16px rgba(0,217,255,0.1)";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.border = "1px solid rgba(255,255,255,0.1)";
+                      e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-sky-400 transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                  </button>
+                </div>
+
+                {/* Remember / Forgot */}
+                <div className="flex items-center justify-between mb-5">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <div
+                      onClick={() => setRemember(!remember)}
+                      className="flex h-4 w-4 items-center justify-center rounded border transition-all cursor-pointer"
+                      style={{
+                        border: remember
+                          ? "1px solid rgba(0,217,255,0.7)"
+                          : "1px solid rgba(255,255,255,0.2)",
+                        background: remember ? "rgba(0,217,255,0.15)" : "rgba(255,255,255,0.04)",
+                        boxShadow: remember ? "0 0 8px rgba(0,217,255,0.4)" : "none",
+                      }}
+                    >
+                      {remember && (
+                        <div
+                          className="h-2 w-2 rounded-sm"
+                          style={{ background: "#00D9FF", boxShadow: "0 0 6px rgba(0,217,255,0.8)" }}
+                        />
+                      )}
+                    </div>
+                    <span className="text-xs text-white/50">Remember me</span>
+                  </label>
+                  <button className="text-xs text-sky-400 hover:text-sky-300 transition-colors font-mono tracking-wide">
+                    Forgot Password?
+                  </button>
+                </div>
+
+                {/* Feedback messages */}
+                {authSuccess && (
+                  <div className="mb-3 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-400 leading-relaxed">
+                    {authSuccess}
+                  </div>
+                )}
+                {authError && (
+                  <div className="mb-3 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-400 leading-relaxed">
+                    {authError}
+                  </div>
+                )}
+
+                {/* Sign In button */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={isAuthenticating}
+                  className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl py-3.5 text-sm font-bold tracking-widest font-mono transition-all disabled:opacity-60"
+                  style={{
+                    background: "linear-gradient(135deg, #00BFFF, #00D9FF, #4FD6FF)",
+                    color: "#000a14",
+                    boxShadow:
+                      "0 0 30px rgba(0,217,255,0.5), 0 0 60px rgba(0,217,255,0.2), 0 4px 20px rgba(0,0,0,0.4)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 0 50px rgba(0,217,255,0.8), 0 0 100px rgba(0,217,255,0.35), 0 4px 24px rgba(0,0,0,0.5)";
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 0 30px rgba(0,217,255,0.5), 0 0 60px rgba(0,217,255,0.2), 0 4px 20px rgba(0,0,0,0.4)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  {/* Light sweep */}
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{
+                      background:
+                        "linear-gradient(110deg, transparent 20%, rgba(255,255,255,0.25) 50%, transparent 80%)",
+                      animation: "lightSweep 1.5s ease-in-out infinite",
+                    }}
+                  />
+                  {isAuthenticating ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <>
+                      {isSignUp ? "CREATE ACCOUNT" : "SIGN IN"}
+                      <ArrowRight size={15} />
+                    </>
+                  )}
+                </button>
+
+                {/* Continue as guest */}
+                <button
+                  onClick={() => navigate({ to: "/" })}
+                  className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border py-2.5 text-xs font-mono tracking-widest transition-all"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.08)",
+                    color: "rgba(255,255,255,0.35)",
+                    background: "rgba(255,255,255,0.02)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(0,217,255,0.2)";
+                    e.currentTarget.style.color = "rgba(0,217,255,0.7)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                    e.currentTarget.style.color = "rgba(255,255,255,0.35)";
+                  }}
+                >
+                  <User size={12} />
+                  CONTINUE AS GUEST
+                </button>
+
+                {/* Security note */}
+                <div className="mt-5 flex items-center justify-center gap-2 border-t pt-4" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
+                  <Shield size={12} className="text-white/25" />
+                  <div className="text-center">
+                    <p className="text-[10px] text-white/35 font-mono tracking-wider">
+                      Secured by Quantum Encryption
+                    </p>
+                    <p className="text-[9px] text-white/20">
+                      256-bit End-to-End Protection
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Stats bar */}
-      <div className="relative z-10 border-t border-white/5 bg-black/30 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-around gap-4 px-6 py-4">
-          {[
-            { value: "195+", label: "Countries" },
-            { value: "1.2M+", label: "News / Day" },
-            { value: "3.8M+", label: "Videos Processed" },
-            { value: "8.9M+", label: "Active Users" },
-            { value: "99.99%", label: "System Uptime" },
-          ].map((s) => (
-            <div key={s.label} className="flex items-center gap-3">
-              <div>
-                <p className="text-sm font-semibold text-sky-400 text-glow">{s.value}</p>
-                <p className="font-mono text-[9px] text-white/40 tracking-widest uppercase">
-                  {s.label}
-                </p>
+      {/* ── Footer status bar ── */}
+      {phase === "ready" && (
+        <footer
+          className="pointer-events-none relative z-20 border-t"
+          style={{
+            borderColor: "rgba(0,217,255,0.08)",
+            background: "rgba(0,5,15,0.6)",
+            backdropFilter: "blur(12px)",
+            animation: "moduleFadeIn 1s ease-out 0.3s both",
+          }}
+        >
+          <div className="flex flex-wrap items-center justify-center gap-6 px-6 py-3">
+            {[
+              { label: "OPCAD AI CORE", value: null, highlight: true },
+              { label: "SYSTEM STATUS", value: "ONLINE", color: "#34d399" },
+              { label: "UPTIME", value: "99.999%", color: "#4FD6FF" },
+              { label: "QUANTUM NETWORK", value: "ACTIVE", color: "#4FD6FF" },
+              { label: "GLOBAL INTELLIGENCE", value: "CONNECTED", color: "#4FD6FF" },
+              { label: "AI CONSCIOUSNESS", value: "ONLINE", color: "#34d399" },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-1.5">
+                {item.value && (
+                  <span
+                    className="relative flex h-1.5 w-1.5"
+                  >
+                    <span
+                      className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                      style={{ background: item.color }}
+                    />
+                    <span
+                      className="relative inline-flex h-1.5 w-1.5 rounded-full"
+                      style={{ background: item.color }}
+                    />
+                  </span>
+                )}
+                <span
+                  className="font-mono text-[9px] tracking-widest"
+                  style={{
+                    color: item.highlight ? "#4FD6FF" : "rgba(255,255,255,0.3)",
+                    textShadow: item.highlight
+                      ? "0 0 10px rgba(0,217,255,0.6)"
+                      : "none",
+                  }}
+                >
+                  {item.label}
+                  {item.value && (
+                    <span style={{ color: item.color ?? "#4FD6FF" }}>
+                      {" "}
+                      · {item.value}
+                    </span>
+                  )}
+                </span>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
+            ))}
+          </div>
+        </footer>
+      )}
 
-      {/* Footer */}
-      <div className="relative z-10 border-t border-white/5 bg-black/40">
-        <div className="flex flex-wrap items-center justify-center gap-4 px-6 py-3 text-[10px] text-white/25">
-          <span>© 2025 OPOAD Technologies. All Rights Reserved.</span>
-          <span className="hidden sm:inline">|</span>
-          <button className="hover:text-white/50 transition-colors">Privacy Policy</button>
-          <button className="hover:text-white/50 transition-colors">Terms of Service</button>
-          <button className="hover:text-white/50 transition-colors">Contact Us</button>
-        </div>
-      </div>
+      {/* ── Boot screen (rendered last so it overlays everything) ── */}
+      {phase === "boot" && <BootScreen onComplete={handleBootComplete} />}
     </div>
   );
 }

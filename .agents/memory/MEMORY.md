@@ -1,0 +1,1 @@
+- [Supabase SSR WebSocket polyfill](supabase-ssr-ws-polyfill.md) — Node 20 lacks native WebSocket; fix lives in supabase.ts using import.meta.env.SSR guard, not server.ts.
