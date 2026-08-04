@@ -38,6 +38,7 @@ import { ErrorBoundary } from "@/components/dashboard/ErrorBoundary";
 import { DescribeBox } from "@/components/dashboard/DescribeBox";
 import { CommandConsole } from "@/components/dashboard/CommandConsole";
 import { AiProcessingOverlay } from "@/components/dashboard/AiProcessingOverlay";
+import { GlobalNetworkPanel } from "@/components/dashboard/GlobalNetworkPanel";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import {
@@ -86,7 +87,7 @@ type ModuleDetail = {
   bullets?: string[];
   accent: string;
   icon: LucideIcon;
-  kind?: "research" | "legal" | "media";
+  kind?: "research" | "legal" | "media" | "global-network";
   tabs?: string[];
   shortcuts?: string[];
 };
@@ -388,6 +389,7 @@ const RIGHT: DashboardModule[] = [
       accent: "Global infrastructure",
       icon: Globe2,
       tabs: ["World Map", "Latency", "Compliance"],
+      kind: "global-network",
     },
   },
 ];
@@ -1647,6 +1649,8 @@ function Dashboard() {
                       </Button>
                     </div>
                   </div>
+                ) : activeModule.kind === "global-network" ? (
+                  <GlobalNetworkPanel />
                 ) : (
                   <>
                     <div className="grid gap-3 sm:grid-cols-2">

@@ -149,6 +149,111 @@ Respond with a clear, structured, and actionable answer. If the query asks for a
     }
   });
 
+export interface NewsAnalysis {
+  summary: string;
+  explanation: string;
+  background: string;
+  whyItHappened: string;
+  keyEntities: string;
+  marketImpact: string;
+  investorViewpoint: string;
+  futurePossibilities: string;
+  riskFactors: string;
+  aiConclusion: string;
+  youtubeScript: string;
+  reelScript: string;
+  analysisReport: string;
+}
+
+// Server function to generate a deep 10-point AI research report on a news item
+export const analyzeNews = createServerFn({ method: "POST" })
+  .validator(
+    (data: { title: string; summary?: string; source?: string; category?: string }) => data,
+  )
+  .handler(async ({ data }) => {
+    try {
+      const ai = getGeminiClient();
+      const prompt = `You are the OPOAD Global Intelligence Core — an elite AI news analyst.
+Perform a deep research analysis on the following news item.
+
+News Item:
+Title: ${data.title}
+Summary: ${data.summary || "No summary available"}
+Source: ${data.source || "Unknown"}
+Category: ${data.category || "General"}
+
+Produce a comprehensive JSON response with these exact fields:
+{
+  "summary": "A concise 2-3 sentence news summary",
+  "explanation": "Complete explanation of what happened, 3-4 sentences",
+  "background": "Background history and context leading to this event, 3-4 sentences",
+  "whyItHappened": "Analysis of why this happened — root causes and triggers, 2-3 sentences",
+  "keyEntities": "Companies and people involved, with brief roles",
+  "marketImpact": "Expected market impact assessment with a score from 1-10 and reasoning",
+  "investorViewpoint": "What this means for investors — opportunities and warnings",
+  "futurePossibilities": "Future possibilities and scenarios this could lead to",
+  "riskFactors": "Key risk factors and downside scenarios",
+  "aiConclusion": "Final AI conclusion and strategic recommendation",
+  "youtubeScript": "A 60-second YouTube video script with [HOOK], [BODY], [OUTRO] sections covering this news",
+  "reelScript": "A 30-second short reel/shorts script optimized for vertical video",
+  "analysisReport": "A formatted professional analysis report with headers and bullet points"
+}`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              summary: { type: Type.STRING },
+              explanation: { type: Type.STRING },
+              background: { type: Type.STRING },
+              whyItHappened: { type: Type.STRING },
+              keyEntities: { type: Type.STRING },
+              marketImpact: { type: Type.STRING },
+              investorViewpoint: { type: Type.STRING },
+              futurePossibilities: { type: Type.STRING },
+              riskFactors: { type: Type.STRING },
+              aiConclusion: { type: Type.STRING },
+              youtubeScript: { type: Type.STRING },
+              reelScript: { type: Type.STRING },
+              analysisReport: { type: Type.STRING },
+            },
+            required: [
+              "summary",
+              "explanation",
+              "background",
+              "whyItHappened",
+              "keyEntities",
+              "marketImpact",
+              "investorViewpoint",
+              "futurePossibilities",
+              "riskFactors",
+              "aiConclusion",
+              "youtubeScript",
+              "reelScript",
+              "analysisReport",
+            ],
+          },
+        },
+      });
+
+      const text = response.text;
+      if (!text) {
+        throw new Error("Empty response received from Gemini API");
+      }
+
+      const analysis = JSON.parse(text) as NewsAnalysis;
+      return { analysis };
+    } catch (error: unknown) {
+      console.error("[analyzeNews] Server function error:", error);
+      const errMsg = error instanceof Error ? error.message : "Failed to analyze news.";
+      throw new Error(errMsg);
+    }
+  });
+
 // Server function to generate a detailed, structured creator script
 export const generateScript = createServerFn({ method: "POST" })
   .validator(
