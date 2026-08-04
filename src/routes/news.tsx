@@ -1007,7 +1007,7 @@ function CreatorStudioModal({ item, onClose }: { item: NewsItem; onClose: () => 
                       Generated Concepts (5 Channels)
                     </p>
                     <span className="font-mono text-[9px] uppercase text-muted-foreground">
-                      Powered by Gemini 3.5 Flash
+                      Powered by Gemini 1.5 Flash
                     </span>
                   </div>
 

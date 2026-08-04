@@ -65,7 +65,7 @@ All text in the generated ideas should strictly respect the requested language (
 `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-1.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -132,7 +132,7 @@ ${modeInstructions}
 Respond with a clear, structured, and actionable answer. If the query asks for a script, format it with [HOOK], [BODY], and [OUTRO] sections. If it asks for research, provide structured bullet points with key findings. If it asks for analysis, give a concise executive summary followed by detailed breakdown. Always be professional and insightful.`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-1.5-flash",
         contents: prompt,
       });
 
@@ -201,7 +201,7 @@ All scripts must be written in the specified language (${data.language}) and mat
 `;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-1.5-flash",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
