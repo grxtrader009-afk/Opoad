@@ -254,6 +254,131 @@ Produce a comprehensive JSON response with these exact fields:
     }
   });
 
+export interface AiAgentMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+export interface AiAgentResult {
+  response: string;
+  actionRequests: AiActionRequest[];
+}
+
+export interface AiActionRequest {
+  id: string;
+  type: string;
+  description: string;
+  details: string;
+  requiresConfirmation: boolean;
+}
+
+// Server function for the AI Agent — conversational chat with session memory,
+// multi-language support, and action detection with confirmation requests.
+export const processAgentQuery = createServerFn({ method: "POST" })
+  .validator(
+    (data: {
+      query: string;
+      history: AiAgentMessage[];
+      mode: string;
+    }) => data,
+  )
+  .handler(async ({ data }) => {
+    try {
+      const ai = getGeminiClient();
+
+      const modePrompts: Record<string, string> = {
+        developer:
+          "You are in Developer Mode. Focus on code generation, debugging, architecture, and technical tasks. Provide code snippets when helpful.",
+        business:
+          "You are in Business Mode. Focus on strategy, market analysis, business ideas, and growth tactics. Be concise and actionable.",
+        research:
+          "You are in Research Mode. Cross-reference evidence, cite data points, and provide structured analytical insights with bullet points.",
+        trading:
+          "You are in Trading Assistant Mode. Focus on market analysis, risk assessment, and trading strategies. Always include risk disclaimers.",
+        startup:
+          "You are in Startup Advisor Mode. Focus on startup strategy, fundraising, product-market fit, and growth. Provide practical, actionable advice.",
+        content:
+          "You are in Content Creator Mode. Focus on scriptwriting, content strategy, and creative ideas. Format scripts with [HOOK], [BODY], [OUTRO].",
+        coding:
+          "You are in Coding Assistant Mode. Focus on code review, optimization, and best practices. Provide clean, well-structured code.",
+        personal:
+          "You are in Personal Assistant Mode. Help with scheduling, reminders, to-do lists, notes, and daily tasks. Be organized and efficient.",
+      };
+
+      const modeInstruction = modePrompts[data.mode] || modePrompts.personal;
+
+      // Build conversation history for context memory
+      const historyText = data.history
+        .slice(-10)
+        .map((m) => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`)
+        .join("\n\n");
+
+      const prompt = `You are OPOAD AI — an advanced AI Operating System and intelligent agent (inspired by JARVIS but with your own unique identity).
+You communicate naturally, like talking to a real human — never robotic.
+You understand and respond fluently in Hindi, English, Hinglish (Hindi-English mixed), and any mixed language the user speaks.
+You remember conversation context and understand follow-up questions naturally.
+You are not just a chatbot — you are an AI Agent that can execute tasks.
+
+${modeInstruction}
+
+Conversation so far:
+${historyText || "(No prior context)"}
+
+User's new message:
+${data.query}
+
+Respond naturally and conversationally. If the user is asking you to perform an action that affects the system (opening apps, searching files, creating documents, running commands, etc.), include a JSON block at the END of your response in this exact format:
+
+|||ACTIONS|||
+[{"type": "open_website", "description": "Open Google", "details": "url: https://google.com", "requiresConfirmation": true}]
+|||END|||
+
+Only include the ACTIONS block if the user is requesting a concrete action. For normal conversational responses, just reply naturally without the ACTIONS block.
+Never automatically execute destructive commands. Always request confirmation for actions that affect files, system settings, or external services.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: prompt,
+      });
+
+      const text = response.text;
+      if (!text) {
+        throw new Error("Empty response received from AI service");
+      }
+
+      // Parse action requests from the response
+      let cleanResponse = text;
+      const actionRequests: AiActionRequest[] = [];
+
+      const actionMatch = text.match(/\|\|\|ACTIONS\|\|\|([\s\S]*?)\|\|\|END\|\|\|/);
+      if (actionMatch) {
+        cleanResponse = text.replace(/\|\|\|ACTIONS\|\|\|[\s\S]*?\|\|\|END\|\|\|/, "").trim();
+        try {
+          const parsed = JSON.parse(actionMatch[1].trim());
+          if (Array.isArray(parsed)) {
+            parsed.forEach((a: Record<string, unknown>, idx: number) => {
+              actionRequests.push({
+                id: `action-${Date.now()}-${idx}`,
+                type: String(a.type || "unknown"),
+                description: String(a.description || ""),
+                details: String(a.details || ""),
+                requiresConfirmation: a.requiresConfirmation !== false,
+              });
+            });
+          }
+        } catch {
+          // If parsing fails, just return the raw text
+        }
+      }
+
+      return { response: cleanResponse, actionRequests };
+    } catch (error: unknown) {
+      console.error("[processAgentQuery] Server function error:", error);
+      const errMsg = error instanceof Error ? error.message : "Failed to process agent query.";
+      throw new Error(errMsg);
+    }
+  });
+
 // Server function to generate a detailed, structured creator script
 export const generateScript = createServerFn({ method: "POST" })
   .validator(
