@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { lazy, Suspense, useEffect, useState, useRef } from "react";
+import { lazy, Suspense, useEffect, useState, useRef, useCallback } from "react";
 import {
   Bot,
   FolderKanban,
@@ -38,6 +38,7 @@ import { ErrorBoundary } from "@/components/dashboard/ErrorBoundary";
 import { DescribeBox } from "@/components/dashboard/DescribeBox";
 import { CommandConsole } from "@/components/dashboard/CommandConsole";
 import { AiProcessingOverlay } from "@/components/dashboard/AiProcessingOverlay";
+import { DashboardLoader } from "@/components/dashboard/DashboardLoader";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import {
@@ -487,10 +488,52 @@ function DashboardRoute() {
   );
 }
 
+// Renders the 3D Scene and signals when it has mounted so the loader can fade out.
+function SceneWrapper({ onMount }: { onMount: () => void }) {
+  useEffect(() => {
+    onMount();
+  }, [onMount]);
+  return <Scene />;
+}
+
 function Dashboard() {
   const navigate = useNavigate();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [activeModule, setActiveModule] = useState<ModuleDetail | null>(null);
+  const [sceneLoaded, setSceneLoaded] = useState(false);
+  const [loaderGone, setLoaderGone] = useState(false);
+  const [loaderFading, setLoaderFading] = useState(false);
+
+  // Reveal the dashboard only after the 3D globe mounts + fonts/icons are ready
+  const handleSceneMount = useCallback(() => {
+    setSceneLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!sceneLoaded) return;
+    let cancelled = false;
+    const finish = () => {
+      if (cancelled) return;
+      setLoaderFading(true);
+      window.setTimeout(() => setLoaderGone(true), 700);
+    };
+    // Wait for fonts + a short settle delay so cards render together
+    const settle = window.setTimeout(finish, 350);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        if (!cancelled) window.clearTimeout(settle);
+        finish();
+      });
+    }
+    return () => {
+      cancelled = true;
+      window.clearTimeout(settle);
+    };
+  }, [sceneLoaded]);
+
+  const handleLoaderComplete = useCallback(() => {
+    window.dispatchEvent(new Event("opoad-dashboard-ready"));
+  }, []);
 
   // --- FUTURISTIC OPOAD AI DESCRIBE BOX STATES & HANDLERS ---
   const [selectedDashboardArticle, setSelectedDashboardArticle] = useState<{
@@ -707,10 +750,26 @@ function Dashboard() {
       <div className="absolute inset-0 z-0">
         <ErrorBoundary fallback={<div className="absolute inset-0 bg-[#05070A]" />}>
           <Suspense fallback={null}>
-            <Scene />
+            <SceneWrapper onMount={handleSceneMount} />
           </Suspense>
         </ErrorBoundary>
       </div>
+
+      {/* Premium loading overlay — fades out once everything is ready */}
+      {!loaderGone && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 100,
+            opacity: loaderFading ? 0 : 1,
+            pointerEvents: loaderFading ? "none" : "auto",
+            transition: "opacity 700ms ease-in-out",
+          }}
+        >
+          <DashboardLoader onComplete={handleLoaderComplete} />
+        </div>
+      )}
 
       {/* UI layer */}
       <div className="pointer-events-none relative z-10 flex min-h-screen flex-col">
