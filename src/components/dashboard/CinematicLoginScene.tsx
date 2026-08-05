@@ -480,7 +480,7 @@ export function CinematicLoginScene({
   return (
     <WebGLErrorBoundary>
       <Canvas
-        camera={{ position: [0, 0.4, 6.2], fov: 46 }}
+        camera={{ position: [-2.2, 0.4, 6.5], fov: 48 }}
         dpr={[1, 2]}
         gl={{ alpha: true, antialias: true }}
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}

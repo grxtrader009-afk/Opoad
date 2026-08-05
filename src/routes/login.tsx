@@ -117,12 +117,13 @@ function BootScreen({ onComplete }: { onComplete: () => void }) {
         {/* Logo */}
         <div className="flex flex-col items-center gap-2">
           <img
-            src="/opoad-logo-transparent.png"
-            alt="OPCAD"
-            className="h-14 w-auto object-contain"
+            src="/opoad-brand.jpeg"
+            alt="OPOAD"
+            className="h-16 w-auto object-contain"
             style={{
+              mixBlendMode: "screen",
               filter:
-                "brightness(1.8) drop-shadow(0 0 22px rgba(0,217,255,0.9)) drop-shadow(0 0 8px rgba(255,255,255,0.5)) drop-shadow(0 0 50px rgba(0,217,255,0.5))",
+                "brightness(1.5) drop-shadow(0 0 28px rgba(0,180,255,0.9)) drop-shadow(0 0 12px rgba(255,255,255,0.4))",
               animation: "breatheLogo 3s ease-in-out infinite",
             }}
           />
@@ -472,17 +473,17 @@ function LoginPage() {
       <div className="pointer-events-none absolute inset-0 z-[1]">
         <div className="starfield" />
         <div className="grid-overlay" />
-        {/* Ambient radial glow behind Earth center */}
+        {/* Ambient radial glow — right side behind Earth */}
         <div
           className="absolute"
           style={{
             top: "50%",
-            left: "50%",
+            left: "72%",
             transform: "translate(-50%,-50%)",
             width: "700px",
             height: "700px",
             background:
-              "radial-gradient(circle, rgba(0,100,180,0.18) 0%, rgba(0,60,120,0.08) 45%, transparent 70%)",
+              "radial-gradient(circle, rgba(0,100,180,0.22) 0%, rgba(0,60,120,0.10) 45%, transparent 70%)",
             filter: "blur(30px)",
           }}
         />
@@ -500,12 +501,13 @@ function LoginPage() {
           {/* Logo */}
           <div className="flex flex-col items-start gap-0.5">
             <img
-              src="/opoad-logo-transparent.png"
-              alt="OPCAD"
-              className="h-10 w-auto object-contain"
+              src="/opoad-brand.jpeg"
+              alt="OPOAD"
+              className="h-12 w-auto object-contain"
               style={{
+                mixBlendMode: "screen",
                 filter:
-                  "brightness(1.8) drop-shadow(0 0 18px rgba(0,217,255,0.9)) drop-shadow(0 0 6px rgba(255,255,255,0.6)) drop-shadow(0 0 40px rgba(0,217,255,0.5))",
+                  "brightness(1.4) drop-shadow(0 0 20px rgba(0,180,255,0.8)) drop-shadow(0 0 8px rgba(255,255,255,0.3))",
                 animation: "breatheLogo 4s ease-in-out infinite",
               }}
             />
@@ -531,9 +533,11 @@ function LoginPage() {
         </div>
       )}
 
-      {/* ── Central login panel ── */}
+      {/* ── Split layout: card left, Earth right ── */}
       {phase === "ready" && (
-        <div className="pointer-events-auto relative z-20 flex flex-1 items-center justify-center px-4 py-6 min-h-[calc(100vh-160px)]">
+        <div className="pointer-events-auto relative z-20 flex flex-1 items-center px-8 py-6 min-h-[calc(100vh-160px)]">
+          {/* Left column — login card */}
+          <div className="w-full max-w-[460px] ml-4 lg:ml-12 xl:ml-20">
           <div
             className="w-full max-w-md"
             style={{
@@ -841,6 +845,7 @@ function LoginPage() {
               </div>
             </div>
           </div>
+          </div>{/* /left column */}
         </div>
       )}
 
