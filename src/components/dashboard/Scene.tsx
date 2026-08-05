@@ -1,14 +1,14 @@
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars, OrbitControls } from "@react-three/drei";
 import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
-import earthTex from "@/assets/earth.jpg";
+import { getEarthTexture } from "@/lib/earth-texture";
 import { useSettings } from "@/lib/settings";
 
 function Earth({ speed, showAtmosphere }: { speed: number; showAtmosphere: boolean }) {
   const ref = useRef<THREE.Mesh>(null!);
   const glowRef = useRef<THREE.Mesh>(null!);
-  const texture = useLoader(THREE.TextureLoader, earthTex);
+  const texture = getEarthTexture();
 
   useFrame((_, dt) => {
     ref.current.rotation.y += dt * 0.08 * speed;

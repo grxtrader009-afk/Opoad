@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { CinematicLoginScene } from "@/components/dashboard/CinematicLoginScene";
-import { Eye, EyeOff, Mail, Lock, Shield, ArrowRight, Loader2, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Shield, ArrowRight, Loader as Loader2, User } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/login")({
@@ -541,11 +541,12 @@ function LoginPage() {
               className="relative overflow-hidden rounded-3xl p-8"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, rgba(0,120,200,0.06) 100%)",
-                backdropFilter: "blur(24px) saturate(160%)",
-                border: "1px solid rgba(0,217,255,0.25)",
+                  "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.008) 50%, rgba(0,120,200,0.03) 100%)",
+                backdropFilter: "blur(14px) saturate(130%)",
+                WebkitBackdropFilter: "blur(14px) saturate(130%)",
+                border: "1px solid rgba(0,217,255,0.18)",
                 boxShadow:
-                  "0 0 80px rgba(0,217,255,0.08), 0 0 0 1px rgba(0,217,255,0.08), inset 0 1px 0 rgba(255,255,255,0.07), 0 24px 60px rgba(0,0,0,0.6)",
+                  "0 0 60px rgba(0,217,255,0.06), 0 0 0 1px rgba(0,217,255,0.05), inset 0 1px 0 rgba(255,255,255,0.04), 0 24px 60px rgba(0,0,0,0.45)",
                 animation: "neonBorderPulse 4s ease-in-out infinite",
               }}
             >

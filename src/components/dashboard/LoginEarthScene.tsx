@@ -1,8 +1,8 @@
 import { useRef, Suspense } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import * as THREE from "three";
-import earthTex from "@/assets/earth.jpg";
+import { getEarthTexture } from "@/lib/earth-texture";
 
 // Elliptical orbit parameters
 const ORBIT_A = 0.9;  // semi-major axis (X)
@@ -14,7 +14,7 @@ const EARTH_RADIUS = 0.68;
 function OrbitalEarth() {
   const earthRef = useRef<THREE.Mesh>(null!);
   const orbitRef = useRef<THREE.Group>(null!);
-  const texture = useLoader(THREE.TextureLoader, earthTex);
+  const texture = getEarthTexture();
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();

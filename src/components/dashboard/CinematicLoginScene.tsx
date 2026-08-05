@@ -1,19 +1,24 @@
 import { useRef, useMemo, Suspense, Component, type ReactNode } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import * as THREE from "three";
-import earthTex from "@/assets/earth.jpg";
+import { getEarthTexture } from "@/lib/earth-texture";
+
+const EARTH_RADIUS = 1.5;
 
 // ─── Earth ───────────────────────────────────────────────────────────────────
 function Earth() {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const cloudRef = useRef<THREE.Mesh>(null!);
   const groupRef = useRef<THREE.Group>(null!);
   const atmo1Ref = useRef<THREE.Mesh>(null!);
-  const texture = useLoader(THREE.TextureLoader, earthTex);
+  const texture = getEarthTexture();
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
     meshRef.current.rotation.y += 0.0025;
+    // Clouds drift slightly faster than the surface
+    if (cloudRef.current) cloudRef.current.rotation.y += 0.0035;
     // Gentle floating
     groupRef.current.position.y = Math.sin(t * 0.45) * 0.1;
     // Slow atmospheric counter-rotation
@@ -22,34 +27,169 @@ function Earth() {
 
   return (
     <group ref={groupRef}>
-      {/* Main sphere */}
+      {/* Main sphere — continents + subtle city-light emissive */}
       <mesh ref={meshRef}>
-        <sphereGeometry args={[1.5, 64, 64]} />
+        <sphereGeometry args={[EARTH_RADIUS, 64, 64]} />
         <meshStandardMaterial
           map={texture}
-          emissive={new THREE.Color("#001a2e")}
-          emissiveIntensity={0.35}
+          emissiveMap={texture}
+          emissive={new THREE.Color("#0a1830")}
+          emissiveIntensity={0.55}
           roughness={0.7}
           metalness={0.08}
         />
       </mesh>
+
+      {/* Cloud layer — soft white haze drifting slightly faster */}
+      <mesh ref={cloudRef} scale={1.015}>
+        <sphereGeometry args={[EARTH_RADIUS, 48, 48]} />
+        <meshStandardMaterial
+          color="#ffffff"
+          transparent
+          opacity={0.08}
+          roughness={1}
+          metalness={0}
+          depthWrite={false}
+        />
+      </mesh>
+
       {/* Inner atmosphere — blue rim */}
       <mesh ref={atmo1Ref} scale={1.06}>
-        <sphereGeometry args={[1.5, 32, 32]} />
+        <sphereGeometry args={[EARTH_RADIUS, 32, 32]} />
         <meshBasicMaterial color="#38bdf8" transparent opacity={0.14} side={THREE.BackSide} />
       </mesh>
       {/* Mid atmosphere haze */}
       <mesh scale={1.14}>
-        <sphereGeometry args={[1.5, 32, 32]} />
+        <sphereGeometry args={[EARTH_RADIUS, 32, 32]} />
         <meshBasicMaterial color="#00D9FF" transparent opacity={0.06} side={THREE.BackSide} />
       </mesh>
       {/* Outer glow */}
       <mesh scale={1.28}>
-        <sphereGeometry args={[1.5, 32, 32]} />
+        <sphereGeometry args={[EARTH_RADIUS, 32, 32]} />
         <meshBasicMaterial color="#0044cc" transparent opacity={0.03} side={THREE.BackSide} />
       </mesh>
       {/* Blue point light from Earth */}
       <pointLight color="#4FD6FF" intensity={2.0} distance={10} />
+    </group>
+  );
+}
+
+// ─── Great-circle network arcs with traveling data packets ───────────────────
+function slerp(a: THREE.Vector3, b: THREE.Vector3, t: number): THREE.Vector3 {
+  const dot = THREE.MathUtils.clamp(a.dot(b), -1, 1);
+  const theta = Math.acos(dot);
+  if (theta < 0.0001) return a.clone();
+  const sinTheta = Math.sin(theta);
+  const w1 = Math.sin((1 - t) * theta) / sinTheta;
+  const w2 = Math.sin(t * theta) / sinTheta;
+  return a.clone().multiplyScalar(w1).add(b.clone().multiplyScalar(w2));
+}
+
+function NetworkArc({
+  start,
+  end,
+  color = "#4FD6FF",
+  lift = 0.25,
+  packetSpeed = 0.4,
+  packetOffset = 0,
+}: {
+  start: THREE.Vector3;
+  end: THREE.Vector3;
+  color?: string;
+  lift?: number;
+  packetSpeed?: number;
+  packetOffset?: number;
+}) {
+  const lineRef = useRef<THREE.Line>(null!);
+  const packetRef = useRef<THREE.Mesh>(null!);
+  const haloRef = useRef<THREE.Mesh>(null!);
+
+  const { geometry, mid } = useMemo(() => {
+    const pts: THREE.Vector3[] = [];
+    const segments = 64;
+    const m = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(
+      EARTH_RADIUS + lift,
+    );
+    for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      const p = slerp(start, end, t);
+      // Bulge the arc outward toward `mid`
+      const bulge = Math.sin(t * Math.PI);
+      p.lerp(m, bulge * 0.35);
+      pts.push(p);
+    }
+    return { geometry: new THREE.BufferGeometry().setFromPoints(pts), mid: m };
+  }, [start, end, lift]);
+
+  useFrame(({ clock }) => {
+    const t = (clock.getElapsedTime() * packetSpeed + packetOffset) % 1;
+    const p = slerp(start, end, t);
+    const bulge = Math.sin(t * Math.PI);
+    p.lerp(mid, bulge * 0.35);
+    if (packetRef.current) packetRef.current.position.copy(p);
+    if (haloRef.current) {
+      const m = haloRef.current.material as THREE.MeshBasicMaterial;
+      m.opacity = 0.2 + Math.sin(clock.getElapsedTime() * 4 + packetOffset) * 0.15;
+    }
+  });
+
+  return (
+    <group>
+      {/* @ts-expect-error — line primitive */}
+      <line ref={lineRef} geometry={geometry}>
+        <lineBasicMaterial color={color} transparent opacity={0.35} />
+      </line>
+      <mesh ref={packetRef}>
+        <sphereGeometry args={[0.018, 8, 8]} />
+        <meshBasicMaterial color="#ffffff" />
+      </mesh>
+      <mesh ref={haloRef}>
+        <sphereGeometry args={[0.05, 8, 8]} />
+        <meshBasicMaterial color={color} transparent opacity={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
+function NetworkArcs() {
+  const arcs = useMemo(() => {
+    // Pairs of normalized surface points (rough continent anchors)
+    const pts = [
+      new THREE.Vector3(0.8, 0.3, 0.5).normalize(),
+      new THREE.Vector3(-0.6, 0.4, 0.7).normalize(),
+      new THREE.Vector3(0.2, 0.6, -0.8).normalize(),
+      new THREE.Vector3(-0.8, -0.2, -0.5).normalize(),
+      new THREE.Vector3(0.5, -0.5, 0.7).normalize(),
+      new THREE.Vector3(-0.3, -0.6, 0.8).normalize(),
+      new THREE.Vector3(0.9, -0.1, -0.4).normalize(),
+      new THREE.Vector3(-0.5, 0.5, -0.7).normalize(),
+    ];
+    const pairs: Array<[THREE.Vector3, THREE.Vector3]> = [
+      [pts[0], pts[1]],
+      [pts[2], pts[3]],
+      [pts[4], pts[5]],
+      [pts[6], pts[7]],
+      [pts[0], pts[2]],
+      [pts[1], pts[3]],
+      [pts[4], pts[6]],
+      [pts[5], pts[7]],
+    ];
+    return pairs;
+  }, []);
+
+  return (
+    <group>
+      {arcs.map(([a, b], i) => (
+        <NetworkArc
+          key={i}
+          start={a.clone().multiplyScalar(EARTH_RADIUS)}
+          end={b.clone().multiplyScalar(EARTH_RADIUS)}
+          color={i % 2 === 0 ? "#4FD6FF" : "#00D9FF"}
+          lift={0.2 + (i % 3) * 0.08}
+          packetSpeed={0.3 + (i % 4) * 0.08}
+          packetOffset={i * 0.13}
+        />
+      ))}
     </group>
   );
 }
@@ -251,6 +391,7 @@ function SceneContent({ mouseX, mouseY }: { mouseX: number; mouseY: number }) {
   return (
     <group ref={groupRef}>
       <Earth />
+      <NetworkArcs />
 
       {/* Ring 1 — inner, fast, cyan */}
       <OrbitRing
@@ -341,7 +482,7 @@ export function CinematicLoginScene({
       <Canvas
         camera={{ position: [0, 0.4, 6.2], fov: 46 }}
         dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ alpha: true, antialias: true }}
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
       >
         <ambientLight intensity={0.2} />
