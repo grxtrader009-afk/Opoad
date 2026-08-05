@@ -38,8 +38,6 @@ import { ErrorBoundary } from "@/components/dashboard/ErrorBoundary";
 import { DescribeBox } from "@/components/dashboard/DescribeBox";
 import { CommandConsole } from "@/components/dashboard/CommandConsole";
 import { AiProcessingOverlay } from "@/components/dashboard/AiProcessingOverlay";
-import { GlobalNetworkPanel } from "@/components/dashboard/GlobalNetworkPanel";
-import { AiAssistantPanel } from "@/components/dashboard/AiAssistantPanel";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import {
@@ -88,7 +86,7 @@ type ModuleDetail = {
   bullets?: string[];
   accent: string;
   icon: LucideIcon;
-  kind?: "research" | "legal" | "media" | "global-network" | "ai-assistant";
+  kind?: "research" | "legal" | "media";
   tabs?: string[];
   shortcuts?: string[];
 };
@@ -113,7 +111,6 @@ const LEFT: DashboardModule[] = [
       accent: "Conversational AI",
       icon: Bot,
       tabs: ["Chat", "Context Memory", "Agent Config"],
-      kind: "ai-assistant",
     },
   },
   {
@@ -391,7 +388,6 @@ const RIGHT: DashboardModule[] = [
       accent: "Global infrastructure",
       icon: Globe2,
       tabs: ["World Map", "Latency", "Compliance"],
-      kind: "global-network",
     },
   },
 ];
@@ -1651,10 +1647,6 @@ function Dashboard() {
                       </Button>
                     </div>
                   </div>
-                ) : activeModule.kind === "global-network" ? (
-                  <GlobalNetworkPanel />
-                ) : activeModule.kind === "ai-assistant" ? (
-                  <AiAssistantPanel />
                 ) : (
                   <>
                     <div className="grid gap-3 sm:grid-cols-2">
