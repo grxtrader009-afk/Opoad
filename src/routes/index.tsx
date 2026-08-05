@@ -70,12 +70,9 @@ export const Route = createFileRoute("/")({
     ],
   }),
   beforeLoad: async () => {
-    // Auth temporarily bypassed — Supabase project needs to be resumed.
-    // Re-enable by uncommenting the block below after fixing Supabase.
-    return;
-    // if (typeof window === "undefined") return;
-    // const { data } = await supabase.auth.getSession();
-    // if (!data.session) { throw redirect({ to: "/login" }); }
+    if (typeof window === "undefined") return;
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) { throw redirect({ to: "/login" }); }
   },
   component: DashboardRoute,
 });
@@ -476,10 +473,9 @@ function DashboardRoute() {
   const navigate = useNavigate();
   const { session, loading } = useAuth();
 
-  // Auth check bypassed temporarily — re-enable after Supabase is restored
-  // useEffect(() => {
-  //   if (!loading && !session) { navigate({ to: "/login" }); }
-  // }, [session, loading, navigate]);
+  useEffect(() => {
+    if (!loading && !session) { navigate({ to: "/login" }); }
+  }, [session, loading, navigate]);
 
   return (
     <SettingsProvider>

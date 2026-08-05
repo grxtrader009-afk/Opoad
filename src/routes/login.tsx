@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { CinematicLoginScene } from "@/components/dashboard/CinematicLoginScene";
 import { Eye, EyeOff, Mail, Lock, Shield, ArrowRight, Loader as Loader2, User } from "lucide-react";
@@ -11,6 +11,12 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Enter the world's most advanced AI Operating System." },
     ],
   }),
+  beforeLoad: async () => {
+    if (typeof window === "undefined") return;
+    const { supabase } = await import("@/lib/supabase");
+    const { data } = await supabase.auth.getSession();
+    if (data.session) { throw redirect({ to: "/" }); }
+  },
   component: LoginPage,
 });
 
