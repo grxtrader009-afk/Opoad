@@ -1,0 +1,166 @@
+animations, side panels, orbit lines, HUD elements, and overall theme exactly as they are. Only improve the login experience and branding.
+
+1. Remove Existing Login Card
+
+Remove the floating rectangular login card completely.
+
+There should be no separate popup/card in front of the Earth.
+
+2. Replace Earth
+
+Replace the current Earth illustration with a highly realistic NASA-style Earth.
+
+Requirements:
+
+Light blue oceans
+White realistic clouds
+Natural continents
+Soft atmospheric glow
+Cinematic lighting
+Subtle blue rim light
+Ultra HD texture
+Slight slow rotation
+Premium sci-fi look
+
+The Earth should feel like a real planet visible from space.
+
+3. Circular Glass Login (Inside Earth)
+
+Instead of the rectangular login card, create a perfect circular transparent glass interface.
+
+The circle should perfectly match the Earth's visible circular boundary.
+
+The login interface should feel like it is embedded inside the Earth, not floating above it.
+
+Think of it as:
+
+Earth → Transparent HUD Layer → Login UI
+
+The glass should have:
+
+95% transparency
+Frosted glass effect
+Very soft cyan glow
+Thin holographic border
+Blue neon reflections
+Premium futuristic appearance
+
+No solid background.
+
+4. Holographic Login Experience
+
+When the user clicks the email field:
+
+The Earth should begin scanning.
+
+Animations:
+
+Circular scan rings
+Blue scanning waves
+Radar pulse
+HUD particles
+Digital data flow
+Rotating holographic rings
+Tiny glowing dots moving around Earth
+AI recognition animation
+
+When typing:
+
+Characters should trigger holographic scan effects.
+
+When password is entered:
+
+Another security scan animation should play.
+
+When Sign In is pressed:
+
+Create an advanced AI authentication sequence:
+
+Circular loading ring
+Digital particles
+Earth pulse animation
+Global network activation
+AI verification
+Holographic success animation
+
+It should feel like accessing a global AI system.
+
+5. Integrated Login Fields
+
+Email and password fields should not look like traditional input boxes.
+
+Instead:
+
+Transparent holographic inputs
+Cyan glowing outlines
+Rounded futuristic style
+Embedded inside the circular HUD
+Soft neon shadows
+
+Everything should appear as part of the Earth's interface.
+
+6. OPCAD Branding
+
+The current OPCAD logo container looks like a flat horizontal rectangle.
+
+Replace it with a premium futuristic design.
+
+Options:
+
+Option A (Preferred)
+
+Create a floating 3D capsule (pill-shaped) glass panel.
+
+Features:
+
+Transparent glass
+Cyan neon edge
+Depth
+Reflection
+Premium glow
+Holographic lighting
+
+Option B
+
+Integrate the OPCAD logo directly into the top dashboard HUD.
+
+It should feel built into the system, not pasted on top.
+
+The logo should appear as an AI operating system identity.
+
+7. Preserve Existing Dashboard
+
+Do NOT modify:
+
+Side navigation
+Analytics panel
+Orbit lines
+HUD graphics
+Bottom system status
+Background stars
+Global dashboard layout
+Existing animations (unless improved)
+
+Only enhance quality.
+
+8. Visual Quality
+
+Target quality:
+
+Apple Vision Pro UI
+Jarvis (Iron Man)
+Interstellar
+NASA Mission Control
+FUI (Futuristic User Interface)
+Glassmorphism
+Cyberpunk blue aesthetics
+Ultra-premium SaaS landing page
+
+Everything should feel like a next-generation Global AI Operating System.
+
+9. Performance
+Smooth 60 FPS animations
+GPU accelerated transforms
+Optimized rendering
+Responsive on all screen sizes
+No lag
