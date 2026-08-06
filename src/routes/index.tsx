@@ -506,24 +506,31 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    if (!sceneLoaded) return;
     let cancelled = false;
     const finish = () => {
       if (cancelled) return;
       setLoaderFading(true);
       window.setTimeout(() => setLoaderGone(true), 700);
     };
-    // Wait for fonts + a short settle delay so cards render together
-    const settle = window.setTimeout(finish, 350);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        if (!cancelled) window.clearTimeout(settle);
-        finish();
-      });
+    // If the 3D scene mounted, wait for fonts + a short settle so cards render together.
+    if (sceneLoaded) {
+      const settle = window.setTimeout(finish, 350);
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          if (!cancelled) window.clearTimeout(settle);
+          finish();
+        });
+      }
+      return () => {
+        cancelled = true;
+        window.clearTimeout(settle);
+      };
     }
+    // Safety net: if the scene never mounts (WebGL failure, etc.), reveal the dashboard anyway.
+    const fallback = window.setTimeout(finish, 4000);
     return () => {
       cancelled = true;
-      window.clearTimeout(settle);
+      window.clearTimeout(fallback);
     };
   }, [sceneLoaded]);
 
